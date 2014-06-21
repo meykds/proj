@@ -1,0 +1,25 @@
+<div class="container">
+    <%= form_tag("/events", method: "get") do %>
+      <%= date_select("calendar","date") %>
+    <%= submit_tag("Go!") %>
+    <% end %>
+<%= calendrier(:year => @year, :month => @month,:day => @day, :start_on_monday => true, :display => :week) do |cell_begin_time, cell_end_time| %>
+  <!-- this code is run for every cell of the calendar -->
+
+
+  <div class="wordwrap panel panel-default" style="min-width:170px; min-height: 200px;">
+  <% if count_sorted_events(@events_by_date, cell_begin_time, cell_end_time) > 0 %>
+    <!-- this code is run only there is at least one event between cell begin and end -->
+    <% yield_sorted_events(@events_by_date, cell_begin_time, cell_end_time) do |obj| %>
+      <!-- you may handle event/meeting/... with the obj variable -->
+      <div class="panel-body">
+      <li><%= link_to obj.name, obj %><b>(<%= obj.begin_time.strftime("%I:%M%p") %> - <%= obj.end_time.strftime("%I:%M%p") %>)</b></li>
+      </div>
+
+      
+    <% end %>
+
+  <% end %>
+  </div>
+<% end %>
+</div>
